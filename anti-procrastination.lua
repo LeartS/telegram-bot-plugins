@@ -17,8 +17,14 @@ function run(msg, matches)
       for i, key in ipairs(messages) do
          redis:del(key)
       end
-      return msg.from.first_name:gsub("^%l", string.upper) ..
-         ' smettila di messaggiare e torna a lavorare!'
+	  sender msg.from.first_name:gsub("^%l", string.upper)
+
+	  if string.find(sender,"Rosario") then
+	      return  'Saro smettila di messaggiare e torna a lavorare!'
+	  else
+	      return  sender ..' basta messaggiare è ora dei piatti!'
+	  end
+
    end
    return false
 end
