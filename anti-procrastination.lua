@@ -8,7 +8,12 @@ end
 
 function run(msg, matches)
    if not msg.to.type == 'chat' then
-      return
+      return nil
+   end
+   local datetime = os.date("*t", msg.date)
+   if (datetime.wday-1) % 6 == 0 or datetime.hour >= 18 or datetime.hour < 9 or
+      (datetime.hour >= 13 and datetime.hour < 14) then
+      return nil
    end
    store_message(msg)
    key = 'chat:'..msg.to.id..':flood:'..msg.from.id
