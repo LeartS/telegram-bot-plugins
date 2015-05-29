@@ -13,17 +13,18 @@ function run(msg, matches)
    store_message(msg)
    key = 'chat:'..msg.to.id..':flood:'..msg.from.id
    messages = redis:keys(key..':*')
+
    if #messages >= N_MESSAGES then
       for i, key in ipairs(messages) do
          redis:del(key)
       end
-	  sender msg.from.first_name:gsub("^%l", string.upper)
-
-	  if string.find(sender,"Rosario") then
-	      return  'Saro smettila di messaggiare e torna a lavorare!'
-	  else
-	      return  sender ..' basta messaggiare è ora dei piatti!'
-	  end
+      local sender = get_name(msg)
+      if string.lower(sender) == 'rosario' then
+         return  'Saro basta messaggiare Ã¨ ora dei piatti!'
+      else
+         return sender:gsub("^%l", string.upper) ..
+            ' smettila di messaggiare e torna a lavorare!'
+      end
 
    end
    return false
