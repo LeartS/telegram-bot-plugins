@@ -52,7 +52,6 @@ function TestPlugins:testProcrastination()
       to = { type = 'chat', id = '4324234' },
       from = { id = '654645' },
       text = "sono su telegram al posto di lavorare",
-
    }
    luaunit.assertNil(self:emulate(plugin, msg))
 
@@ -69,6 +68,26 @@ function TestPlugins:testProcrastination()
    luaunit.assertErrorMsgContains('redis', TestPlugins.emulate,
                                   self, plugin, msg)
 end
-   
+
+function TestPlugins:testLunchTracker()
+   local plugin = loadfile("lunch-tracker.lua")()
+   local msg = {
+      date = os.time({year=2015, month=5, day=29, hour=19}),
+      to = { type = 'chat', id = '4324234' },
+      from = { id = '654645' },
+      text = "Oggi abbiamo mangiato pasta con ceci, stoviglie e cavolfiori."
+         .." Voto 8",
+   }
+   luaunit.assertErrorMsgContains('redis', TestPlugins.emulate,
+                                  self, plugin, msg)
+
+   msg.text = "Voto 10!"
+   luaunit.assertErrorMsgContains('redis', TestPlugins.emulate,
+                                  self, plugin, msg)
+
+   msg.text = "Oggi non abbiamo mangiato niente :("
+   luaunit.assertFalse(self:emulate(plugin, msg))
+end
+      
 
 os.exit( luaunit.LuaUnit.run() )
