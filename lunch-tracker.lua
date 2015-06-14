@@ -1,7 +1,12 @@
 local SAVE_LUNCH_PATTERN = ".*[oO]ggi abbiamo mangiato ([^%.]*)"
-local CAST_VOTE_PATTERN = ".*[vV]oto (%d+).*"
+local CAST_VOTE_PATTERN = ".*[vV]oto:? ?([%d%.]+)"
 
-function cast_vote(lunch, vote, user)
+function cast_vote(lunch, vote_raw_string, user)
+   local vote = tonumber(vote_raw_string)
+   if vote == nil or vote < 0 or vote > 10 then
+      return "Voto invalido: " .. vote_raw_string
+   end
+   vote = string.format("%.1f", vote)
    redis:hset(lunch .. ':votes', user.id, vote)
    return "Voto registrato per " .. user.first_name .. ": " .. vote .. "."
 end
@@ -23,9 +28,9 @@ function run(msg, matches)
       send_large_msg(get_receiver(msg), response)
    end
 
-   vote = string.match(msg.text, CAST_VOTE_PATTERN)
+   vote_raw_string = string.match(msg.text, CAST_VOTE_PATTERN)
    if vote then
-      local response = cast_vote(key, vote, msg.from)
+      local response = cast_vote(key, vote_raw_string, msg.from)
       send_large_msg(get_receiver(msg), response)
    end
 end
