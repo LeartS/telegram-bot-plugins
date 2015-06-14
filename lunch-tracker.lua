@@ -22,14 +22,14 @@ function run(msg, matches)
    local today = os.date('%Y-%m-%d')
    local key = 'chat:' .. msg.to.id .. ':lunch:' .. today
 
-   lunch_description = string.match(msg.text, SAVE_LUNCH_PATTERN)
+   local lunch_description = string.match(msg.text, SAVE_LUNCH_PATTERN)
    if lunch_description then
       local response = set_lunch(key, lunch_description)
       send_large_msg(get_receiver(msg), response)
    end
 
-   vote_raw_string = string.match(msg.text, CAST_VOTE_PATTERN)
-   if vote then
+   local vote_raw_string = string.match(msg.text, CAST_VOTE_PATTERN)
+   if vote_raw_string then
       local response = cast_vote(key, vote_raw_string, msg.from)
       send_large_msg(get_receiver(msg), response)
    end
