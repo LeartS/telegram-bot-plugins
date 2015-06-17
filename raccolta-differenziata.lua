@@ -15,10 +15,11 @@ local function cron()
    -- evaluate to true exactly once a day
    if now.hour == 17 and now.min > 40 and now.min < 46 then
       if DAYS[now.wday] ~= nil then
-         local m = 'Ehy, qualcuno in ufficio? Ci sarebbe da portare fuori '
+         local m = 'Ragazzi ricordatevi che oggi bisogna portare fuori '
          if now.wday == 7 then
             -- Special message for saturday
-            m = 'Ragazzi prima di andare ricordatevi che oggi bisogna portare '
+            m = 'Se per caso qualcuno si trova in ufficio, ci sarebbe da' ..
+               ' portare fuori '
          end
          send_large_msg(CHANNEL, m .. DAYS[now.wday])
       end
