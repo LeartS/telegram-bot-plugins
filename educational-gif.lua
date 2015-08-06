@@ -1,3 +1,7 @@
+-- Sends a random submissions from /r/educationalgif
+-- with at least MIN_SUBMISSION_SCORE points.
+-- Retries until the gif size is less than MAX_GIF_SIZE
+
 local MIN_SUBMISSION_SCORE = 5 -- If less, ignore and try another submission
 local MAX_GIF_SIZE = 10485760 -- In bytes. If bigger, try another submission
 
@@ -43,7 +47,7 @@ function run(msg, matches)
 end
 
 return {
-	description = "Educationl Gif",
+	description = "Educational Gif",
 	usage = "!edugif",
 	patterns = { "^!edugif$" },
 	run = run

@@ -1,3 +1,7 @@
+-- Spam / Procrastination check
+-- Admonish someone if he sends more than N_MESSAGES messages in TIME_INTERVAL
+-- Useful for group chats, particulary work chats and similar
+
 local TIME_INTERVAL = 180 -- seconds
 local N_MESSAGES = 4
 
@@ -24,19 +28,14 @@ function run(msg, matches)
          redis:del(key)
       end
       local sender = get_name(msg)
-      if string.lower(sender) == 'rosario' then
-         return  'Saro basta messaggiare è ora dei piatti!'
-      else
-         return sender:gsub("^%l", string.upper) ..
-            ' smettila di messaggiare e torna a lavorare!'
-      end
-
+      return sender:gsub("^%l", string.upper) ..
+         ' stop messaging and get back to work!'
    end
    return false
 end
 
 return {
-   description = "Tiene in riga i dipendenti",
+   description = "Call out people sending too many messages in a short time",
    patterns = { "." },
    run = run
 }
