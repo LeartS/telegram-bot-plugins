@@ -31,16 +31,6 @@ function TestPlugins:emulate(plugin, msg)
    return false
 end
 
-function TestPlugins:testPiatti()
-   local t = loadfile("piatti.lua")()
-   luaunit.assertTrue(self:matchPlugin(t, 'Piatti?'))
-   luaunit.assertTrue(self:matchPlugin(t, 'A chi tocca fare i piatti?'))
-   luaunit.assertFalse(self:matchPlugin(t, 'Lavapiatti'))
-   luaunit.assertFalse(self:matchPlugin(t, 'Appiattito'))
-   luaunit.assertFalse(self:matchPlugin(t, 'Accalappiapiatti'))
-   luaunit.assertFalse(self:matchPlugin(t, 'Piattivendolo'))
-end
-
 function TestPlugins:testProcrastination()
    -- We can't check if it really works because we would need redis and the
    -- lua redis library, but at least we can check that the time controls work
@@ -67,26 +57,6 @@ function TestPlugins:testProcrastination()
    msg.date = os.time({year=2015, month=5, day=29, hour=11})
    luaunit.assertErrorMsgContains('redis', TestPlugins.emulate,
                                   self, plugin, msg)
-end
-
-function TestPlugins:testLunchTracker()
-   local plugin = loadfile("lunch-tracker.lua")()
-   local msg = {
-      date = os.time({year=2015, month=5, day=29, hour=19}),
-      to = { type = 'chat', id = '4324234' },
-      from = { id = '654645' },
-      text = "Oggi abbiamo mangiato pasta con ceci, stoviglie e cavolfiori."
-         .." Voto 8",
-   }
-   luaunit.assertErrorMsgContains('redis', TestPlugins.emulate,
-                                  self, plugin, msg)
-
-   msg.text = "Voto 10!"
-   luaunit.assertErrorMsgContains('redis', TestPlugins.emulate,
-                                  self, plugin, msg)
-
-   msg.text = "Oggi non abbiamo mangiato niente :("
-   luaunit.assertFalse(self:emulate(plugin, msg))
 end
       
 
